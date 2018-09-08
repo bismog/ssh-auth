@@ -1,0 +1,33 @@
+---
+# - hosts: localhost
+#   # gather_facts: no
+#   tasks:
+#     - name: Add nodes into inventory group
+#       vars:
+#         nodes: "{{ lookup('file', '/tmp/nodes.txt') }}"
+#         #node_file_env: "{{ lookup('env', 'node_file') }}"
+#         #node_file_env: "{{ node_file }}"
+#         #nodes: "{{ lookup('file', node_file_env) }}"
+#       add_host:
+#         hostname: "{{ item }}"
+#         group: "auth_group"
+#         ansible_ssh_host: "{{ item }}"
+#         ansible_ssh_user: "bismog"
+#         ansible_ssh_pass: "justfor354"
+#       with_items: "{{ nodes }}"
+# 
+- hosts: cluster
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Setup mutual authorization
+      authorized_key:
+        user: "bismog"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: Setup another more user
+      authorized_key:
+        user: "admin"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

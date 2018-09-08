@@ -1,0 +1,21 @@
+
+
+
+### Background
+I have a cluster with 1-3 of them act as manage nodes. 
+For some reason, I need create mutual authorization from these manage nodes to all nodes in cluster.
+And I should face the reality that there will be some new borned nodes in the future.
+
+
+### What-I-Do
+A database of Etcd to store all cluster nodes informantion.
+Setting up mutual authorization from manage nodes to all cluster nodes automatically.
+All cluster nodes have the same default user and password.
+After mutual autorization, I will make PasswordAuthentication to anavailable.
+So this project is something of auto deployment.
+
+
+### How-To-Use
+
+
+
