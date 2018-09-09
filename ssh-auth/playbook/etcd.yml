@@ -1,0 +1,87 @@
+---
+- hosts: host1
+  gather_facts: false
+  tasks:
+    - name: Create network
+      docker_network:
+        name: etcd_network
+        ipam_driver: default
+        ipam_options:
+          subnet: '172.19.0.0/16'
+        # connected:
+        #   - etcd1
+        #   - etcd2
+        #   - etcd3
+
+    - name: Run etcd
+      docker_container:
+        name: etcd1
+        image: quay.io/coreos/etcd
+        restart: always
+        env:
+          ETCD_NAME: infra1
+          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
+          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.10:2379,http://172.19.1.10:4001
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.10:4001
+
+- hosts: host2
+  gather_facts: false
+  tasks:
+    - name: Create network
+      docker_network:
+        name: etcd_network
+        ipam_driver: default
+        ipam_options:
+          subnet: '172.19.0.0/16'
+        # connected:
+        #   - etcd1
+        #   - etcd2
+        #   - etcd3
+
+    - name: Run etcd
+      docker_container:
+        name: etcd2
+        image: quay.io/coreos/etcd
+        restart: always
+        env:
+          ETCD_NAME: infra1
+          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
+          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.11:2379,http://172.19.1.11:4001
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.11:4001
+
+- hosts: host3
+  gather_facts: false
+  tasks:
+    - name: Create network
+      docker_network:
+        name: etcd_network
+        ipam_driver: default
+        ipam_options:
+          subnet: '172.19.0.0/16'
+        # connected:
+        #   - etcd1
+        #   - etcd2
+        #   - etcd3
+
+    - name: Run etcd
+      docker_container:
+        name: etcd3
+        image: quay.io/coreos/etcd
+        restart: always
+        env:
+          ETCD_NAME: infra1
+          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
+          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.12:2379,http://172.19.1.12:4001
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.12:4001

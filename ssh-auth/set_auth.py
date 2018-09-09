@@ -97,7 +97,7 @@ class Playbook(object):
 
 def main():
     nodes = ['192.168.3.45']
-    playbook = '{}/playbook/site.yml'.format(PATH)
+    playbook = '{}/playbook/auth.yml'.format(PATH)
     pb = Playbook(nodes, playbooks=[playbook,])
     # hack for verbosity
     from ansible.utils.display import Display
