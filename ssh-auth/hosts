@@ -1,0 +1,2 @@
+[cluster]
+192.168.3.45 ansible_ssh_user=bismog
