@@ -1,13 +1,15 @@
 ---
 - hosts: host1
   gather_facts: false
+  become: yes
   tasks:
-    - name: Create network
-      docker_network:
-        name: etcd_network
-        ipam_driver: default
-        ipam_options:
-          subnet: '172.19.0.0/16'
+    # - name: Create network
+    #   docker_network:
+    #     name: etcd_network
+    #     ipam_driver: default
+    #     ipam_options:
+    #       subnet: '172.19.0.0/16'
+    #     state: present
         # connected:
         #   - etcd1
         #   - etcd2
@@ -17,71 +19,66 @@
       docker_container:
         name: etcd1
         image: quay.io/coreos/etcd
-        restart: always
+        restart_policy: always
+        expose:
+          - 2379:2379
+          - 2380:2380
+          - 4001:4001
+        network_mode: host
         env:
           ETCD_NAME: infra1
-          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_INITIAL_CLUSTER: infra1=http://{{ ansible_host }}:2380,infra2=http://{{ ansible_host }}:2480,infra3=http://{{ ansible_host }}:2580
           ETCD_INITIAL_CLUSTER_STATE: new
           ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
-          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
-          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.10:2379,http://172.19.1.10:4001
-          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.10:4001
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379,http://0.0.0.0:4001
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+          ETCD_ADVERTISE_CLIENT_URLS: http://{{ ansible_host }}:2379,http://{{ ansible_host }}:4001
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://{{ ansible_host }}:2380
 
 - hosts: host2
   gather_facts: false
+  become: yes
   tasks:
-    - name: Create network
-      docker_network:
-        name: etcd_network
-        ipam_driver: default
-        ipam_options:
-          subnet: '172.19.0.0/16'
-        # connected:
-        #   - etcd1
-        #   - etcd2
-        #   - etcd3
-
     - name: Run etcd
       docker_container:
         name: etcd2
         image: quay.io/coreos/etcd
-        restart: always
+        restart_policy: always
+        expose:
+          - 2479:2479
+          - 2480:2480
+          - 4101:4101
+        network_mode: host
         env:
-          ETCD_NAME: infra1
-          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_NAME: infra2
+          ETCD_INITIAL_CLUSTER: infra1=http://{{ ansible_host }}:2380,infra2=http://{{ ansible_host }}:2480,infra3=http://{{ ansible_host }}:2580
           ETCD_INITIAL_CLUSTER_STATE: new
           ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
-          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
-          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.11:2379,http://172.19.1.11:4001
-          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.11:4001
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2479,http://0.0.0.0:4101
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2480
+          ETCD_ADVERTISE_CLIENT_URLS: http://{{ ansible_host }}:2479,http://{{ ansible_host }}:4101
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://{{ ansible_host }}:2480
 
 - hosts: host3
   gather_facts: false
+  become: yes
   tasks:
-    - name: Create network
-      docker_network:
-        name: etcd_network
-        ipam_driver: default
-        ipam_options:
-          subnet: '172.19.0.0/16'
-        # connected:
-        #   - etcd1
-        #   - etcd2
-        #   - etcd3
-
     - name: Run etcd
       docker_container:
         name: etcd3
         image: quay.io/coreos/etcd
-        restart: always
+        restart_policy: always
+        expose:
+          - 2579:2579
+          - 2580:2580
+          - 4201:4201
+        network_mode: host
         env:
-          ETCD_NAME: infra1
-          ETCD_INITIAL_CLUSTER: infra1=http://172.19.1.10:4001,infra2=http://172.19.1.11:4001,infra3=http://172.19.1.12:4001
+          ETCD_NAME: infra3
+          ETCD_INITIAL_CLUSTER: infra1=http://{{ ansible_host }}:2380,infra2=http://{{ ansible_host }}:2480,infra3=http://{{ ansible_host }}:2580
           ETCD_INITIAL_CLUSTER_STATE: new
           ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
-          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:4001
-          ETCD_ADVERTISE_CLIENT_URLS: http://172.19.1.12:2379,http://172.19.1.12:4001
-          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.19.1.12:4001
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2579,http://0.0.0.0:4201
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2580
+          ETCD_ADVERTISE_CLIENT_URLS: http://{{ ansible_host }}:2579,http://{{ ansible_host }}:4201
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://{{ ansible_host }}:2580

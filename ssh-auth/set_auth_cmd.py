@@ -16,13 +16,21 @@ ANSIBLE_CONFIG_PATH=PATH+'/playbook'
 
 class Auth(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, inventory=None, playbook=None, log='/tmp/ansible.log'):
+        if not inventory:
+            self.inventory = '{}/{}'.format(PATH, 'playbook/hosts')
+        else: 
+            self.inventory = inventory
+        if not playbook:
+            self.playbook = '{}/{}'.format(PATH, 'playbook/auth.yml')
+        else:
+            self.playbook = playbook
+        self.log = log
 
-    def run(self, play='playbook/auth.yml', log='/tmp/ansible.log'):
-        cmd = 'ansible-playbook {}/{}'.format(PATH, play)
+    def run(self):
+        cmd = 'ansible-playbook -i {} {}'.format(self.inventory, self.playbook)
         # subprocess.check_output(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        with open(log, 'a') as f:
+        with open(self.log, 'a') as f:
             os.putenv('ANSIBLE_CONFIG', ANSIBLE_CONFIG_PATH)
             p = subprocess.Popen(cmd.split(), stdout=f, stderr=f)
             # p.communicate()
