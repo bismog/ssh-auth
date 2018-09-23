@@ -1,0 +1,55 @@
+---
+network:
+  name: "etcd_network"
+cluster:
+  host1:
+    host_name: "192.168.3.45"
+    container_name: "etcd1"
+    etcd_name: "infra1"
+    etcd_ip: "172.19.0.4"
+    etcd_client_port: 12379
+    etcd_peer_port: 12380
+    etcd_backup_client_port: 14001
+  host2:
+    host_name: "192.168.3.45"
+    container_name: "etcd2"
+    etcd_name: "infra2"
+    etcd_ip: "172.19.0.5"
+    etcd_client_port: 22379
+    etcd_peer_port: 22380
+    etcd_backup_client_port: 24001
+  host3:
+    host_name: "192.168.3.45"
+    container_name: "etcd3"
+    etcd_name: "infra3"
+    etcd_ip: "172.19.0.6"
+    etcd_client_port: 32379
+    etcd_peer_port: 32380
+    etcd_backup_client_port: 34001
+#  - {
+#      host_name: "192.168.3.45",
+#      container_name: "etcd1",
+#      etcd_name: "infra1",
+#      etcd_ip: "172.19.0.4",
+#      etcd_client_port: 12379,
+#      etcd_peer_port: 12380,
+#      etcd_backup_client_port: 14001
+#    }
+#  - {
+#      host_name: "192.168.3.45",
+#      container_name: "etcd2",
+#      etcd_name: "infra2",
+#      etcd_ip: "172.19.0.5",
+#      etcd_client_port: 22379,
+#      etcd_peer_port: 22380,
+#      etcd_backup_client_port: 24001
+#    }
+#  - {
+#      host_name: "192.168.3.45",
+#      container_name: "etcd3",
+#      etcd_name: "infra3",
+#      etcd_ip: "172.19.0.6",
+#      etcd_client_port: 32379,
+#      etcd_peer_port: 32380,
+#      etcd_backup_client_port: 34001
+#    }

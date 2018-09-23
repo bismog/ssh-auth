@@ -1,0 +1,27 @@
+---
+{% for vhost in cluster %}
+- hosts: {{ vhost.host_name }}
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Run etcd
+      docker_container:
+        name: {{ vhost.container_name }}
+        image: quay.io/coreos/etcd
+        networks:
+          - name: {{ network.name }}
+            ipv4_address: {{ vhost.etcd_ip }}
+        restart_policy: always
+        published_ports:
+          - {{ vhost.etcd_client_port }}:2379
+          - {{ vhost.etcd_peer_port }}:2380
+          - {{ vhost.etcd_backup_client_port }}:4001
+        env:
+          ETCD_NAME: {{ vhost.etcd_name }}
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:{{ vhost.etcd_client_port }},http://0.0.0.0:{{ vhost.etcd_backup_client_port }},http://localhost:2379
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:{{ vhost.etcd_peer_port }},http://localhost:2380
+          ETCD_ADVERTISE_CLIENT_URLS: http://{{ vhost.etcd_ip }}:{{ vhost.etcd_client_port }},http://{{ vhost.etcd_ip }}:{{ vhost.etcd_backup_client_port }}
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://{{ vhost.etcd_ip }}:{{ vhost.etcd_peer_port }}
+{% endfor %}

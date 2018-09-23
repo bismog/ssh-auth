@@ -1,0 +1,4 @@
+FROM quay.io/coreos/etcd:latest
+
+RUN pip install python-etcd==0.4.5
+
