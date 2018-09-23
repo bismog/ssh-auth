@@ -1,4 +1,0 @@
-- name: ansible jinja2 template file
-  template:
-    src: test1.j2
-    dest: /tmp/test_playbook.yml
