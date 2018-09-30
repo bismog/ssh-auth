@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch etcd key-value and setup SSH mutual authorization
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=
+ExecStart=
+
+[Install]
+
