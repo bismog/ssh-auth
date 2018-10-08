@@ -1,11 +1,23 @@
 from setuptools import setup
 from setuptools.command.install import install
+from shutil import copyfile
+import subprocess
 
 class myinstall(install):
     """ My Installation scripts"""
     def run(self):
-        print "Hello, this is my installation script"
         install.run(self)
+        # print self.install_lib
+        # print "Hello, this is my installation script"
+        # Copy ssh-auth.service to system service path
+        src = ''.join((self.install_lib, 'ssh_auth/system.d/ssh-auth.service'))
+        dst = '/etc/systemd/system/ssh-auth.service'
+        copyfile(src, dst)
+
+        # run daemon-reload
+        cmd = 'systemctl daemon-reload'
+        p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+        o,e = p.communicate()
 
 setup(name='ssh_auth',
     version='0.1',
@@ -16,9 +28,9 @@ setup(name='ssh_auth',
     license='MIT',
     packages=['ssh_auth'],
     package_data={
-        'ssh_auth':['playbook.d/*',],
+        'ssh_auth':['playbook.d/*', 'system.d/ssh-auth.service'],
     },
-    scripts=['ssh_auth/etc/systemd/system/multi-user.target.wants/ssh_auth.service'],
+    # scripts=['ssh_auth/etc/systemd/system/multi-user.target.wants/ssh_auth.service'],
     cmdclass={
         'install': myinstall,
     },
