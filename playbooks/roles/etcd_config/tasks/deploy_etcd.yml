@@ -1,4 +1,10 @@
 ---
+- name: Create network
+  docker_network:
+    name: etcd_network
+    state: present
+    ipam_options:
+      subnet: "172.19.0.0/16"
 - name: run etcd 1
   docker_container:
     name: "{{ cluster.host1.container_name }}"
@@ -33,5 +39,9 @@
     force: yes
     
 - command: "python setup.py sdist"
+  args:
+    chdir: "/tmp/auth/ssh_auth"
+
+- command: "pip install dist/ssh_auth-0.1.tar.gz"
   args:
     chdir: "/tmp/auth/ssh_auth"
