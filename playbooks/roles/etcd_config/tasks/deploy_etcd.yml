@@ -1,11 +1,21 @@
 ---
+- name: Install pip via easy_install
+  easy_install:
+    name: pip
+    state: present
+
+- name: Install ansible package via pip
+  pip:
+    name: ansible
+
 - name: Create network
   docker_network:
     name: etcd_network
     state: present
     ipam_options:
       subnet: "172.19.0.0/16"
-- name: run etcd 1
+
+- name: Run etcd 1
   docker_container:
     name: "{{ cluster.host1.container_name }}"
     image: quay.io/coreos/etcd
@@ -32,16 +42,19 @@
     path: "/tmp/auth"
     state: directory
 
-- git:
+- name: Clone repository from github.com
+  git:
     repo: "https://github.com/bismog/ssh-auth.git"
     dest: "/tmp/auth/"
     # accept_hostkey: yes
     force: yes
     
-- command: "python setup.py sdist"
+- name: Build package
+  command: "python setup.py sdist"
   args:
     chdir: "/tmp/auth/ssh_auth"
 
-- command: "pip install dist/ssh_auth-0.1.tar.gz"
+- name: Install package
+  command: "pip install dist/ssh_auth-0.1.tar.gz"
   args:
     chdir: "/tmp/auth/ssh_auth"
