@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import os
 import json
@@ -34,7 +35,6 @@ class SSHAuth(object):
         a.run()
 
 def main():
-
     ssh_auth = SSHAuth()
     while True:
         ssh_auth.watch('localhost', 2379, 'nodes')

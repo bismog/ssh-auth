@@ -30,7 +30,7 @@ setup(name='ssh_auth',
     package_data={
         'ssh_auth':['playbook.d/*', 'system.d/ssh-auth.service'],
     },
-    # scripts=['ssh_auth/etc/systemd/system/multi-user.target.wants/ssh_auth.service'],
+    scripts=['ssh_auth/bin/ssh-auth'],
     cmdclass={
         'install': myinstall,
     },
