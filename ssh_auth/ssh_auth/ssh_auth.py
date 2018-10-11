@@ -13,12 +13,15 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 
 class SSHAuth(object):
     def __init__(self):
-        pass
+        self.d = Data(host=host, port=port)
+        self.key = 'nodes'
+        self.nodes = self.d.get(key=self.key)
+        print json.loads(self.nodes)
 
-    def watch(self, host, port, key):
-        d = Data(host=host, port=port)
-        d.watch(key=key)
-        data = json.loads(d.get(key=key))
+    def watch(self, host, port):
+        self.d.watch(key=self.key)
+        cur_nodes = self.d.get(key=self.key)
+        data = json.loads(cur_nodes))
         print data
         return data
 
@@ -36,9 +39,9 @@ class SSHAuth(object):
 
 def main():
     ssh_auth = SSHAuth()
-    while True:
-        ssh_auth.watch('localhost', 2379, 'nodes')
-        ssh_auth.callback()
+    # while True:
+    #     ssh_auth.watch('localhost', 2379)
+    #     ssh_auth.callback()
 
 if __name__ == "__main__":
     main()
