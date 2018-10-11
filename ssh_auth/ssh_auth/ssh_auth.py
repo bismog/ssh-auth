@@ -4,7 +4,7 @@ import os
 import json
 # from deploy import Compose
 # from play import Playbook
-from run_etcd_cmd import Deploy
+# from run_etcd_cmd import Deploy
 from set_auth_cmd import Auth
 from data import Data
 
