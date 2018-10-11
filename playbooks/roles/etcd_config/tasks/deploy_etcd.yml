@@ -55,6 +55,5 @@
     chdir: "/tmp/auth/ssh_auth"
 
 - name: Install package
-  command: "pip install dist/ssh_auth-0.1.tar.gz"
-  args:
-    chdir: "/tmp/auth/ssh_auth"
+  pip:
+    name: "/tmp/auth/ssh_auth/dist/ssh_auth-0.1.tar.gz"
