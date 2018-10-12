@@ -37,6 +37,28 @@
       ETCD_ADVERTISE_CLIENT_URLS: "http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_client_port }},http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_backup_client_port }}"
       ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_peer_port }}"
 
+- name: Run etcd 2
+  docker_container:
+    name: "{{ cluster.host2.container_name }}"
+    image: quay.io/coreos/etcd
+    networks:
+      - name: etcd_network
+        ipv4_address: "{{ cluster.host2.etcd_ip }}"
+    restart_policy: always
+    published_ports:
+      - "{{ cluster.host2.etcd_client_port }}:2379"
+      - "{{ cluster.host2.etcd_peer_port }}:2380"
+      - "{{ cluster.host2.etcd_backup_client_port }}:4001"
+    env:
+      ETCD_NAME: "{{ cluster.host2.etcd_name }}"
+      ETCD_INITIAL_CLUSTER: "{{ cluster.host1.etcd_name }}=http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_peer_port }},{{ cluster.host2.etcd_name }}=http://{{ cluster.host2.etcd_ip }}:{{ cluster.host2.etcd_peer_port }},{{ cluster.host3.etcd_name }}=http://{{ cluster.host3.etcd_ip }}:{{ cluster.host3.etcd_peer_port }}"
+      ETCD_INITIAL_CLUSTER_STATE: new
+      ETCD_INITIAL_CLUSTER_TOKEN: etcd-tasting-01
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{ cluster.host2.etcd_client_port }},http://0.0.0.0:{{ cluster.host2.etcd_backup_client_port }},http://localhost:2379"
+      ETCD_LISTEN_PEER_URLS: "http://0.0.0.0:{{ cluster.host2.etcd_peer_port }},http://localhost:2380"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://{{ cluster.host2.etcd_ip }}:{{ cluster.host2.etcd_client_port }},http://{{ cluster.host2.etcd_ip }}:{{ cluster.host2.etcd_backup_client_port }}"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://{{ cluster.host2.etcd_ip }}:{{ cluster.host2.etcd_peer_port }}"
+
 - name: Install python-etcd pypi package
   pip:
     name: python-etcd
