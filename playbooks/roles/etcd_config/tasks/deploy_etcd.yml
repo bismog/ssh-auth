@@ -37,7 +37,11 @@
       ETCD_ADVERTISE_CLIENT_URLS: "http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_client_port }},http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_backup_client_port }}"
       ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://{{ cluster.host1.etcd_ip }}:{{ cluster.host1.etcd_peer_port }}"
 
-- name: Install pypi package
+- name: Install python-etcd pypi package
+  pip:
+    name: python-etcd
+
+- name: Install ssh_auth pypi package
   file:
     path: "/tmp/auth"
     state: directory

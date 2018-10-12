@@ -13,15 +13,17 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 
 class SSHAuth(object):
     def __init__(self):
-        self.d = Data(host=host, port=port)
+        self.server = 'localhost'
+        self.port = 2379
         self.key = 'nodes'
+        self.d = Data(host=self.server, port=self.port)
         self.nodes = self.d.get(key=self.key)
         print json.loads(self.nodes)
 
     def watch(self, host, port):
         self.d.watch(key=self.key)
         cur_nodes = self.d.get(key=self.key)
-        data = json.loads(cur_nodes))
+        data = json.loads(cur_nodes)
         print data
         return data
 
