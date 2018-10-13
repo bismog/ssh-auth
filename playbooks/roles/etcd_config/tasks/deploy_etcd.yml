@@ -10,7 +10,7 @@
 
 - name: Create network
   docker_network:
-    name: etcd_network
+    name: "{{ network.name }}"
     state: present
     ipam_options:
       subnet: "172.19.0.0/16"
@@ -20,7 +20,7 @@
     name: "{{ cluster.host1.container_name }}"
     image: quay.io/coreos/etcd
     networks:
-      - name: etcd_network
+      - name: "{{ network.name }}"
         ipv4_address: "{{ cluster.host1.etcd_ip }}"
     restart_policy: always
     published_ports:
@@ -42,7 +42,7 @@
     name: "{{ cluster.host2.container_name }}"
     image: quay.io/coreos/etcd
     networks:
-      - name: etcd_network
+      - name: "{{ network.name }}"
         ipv4_address: "{{ cluster.host2.etcd_ip }}"
     restart_policy: always
     published_ports:
