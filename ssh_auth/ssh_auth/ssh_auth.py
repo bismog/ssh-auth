@@ -14,7 +14,7 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 class SSHAuth(object):
     def __init__(self):
         self.server = 'localhost'
-        self.port = 2379
+        self.port = 12379
         self.key = 'nodes'
         self.d = Data(host=self.server, port=self.port)
         self.nodes = self.d.get(key=self.key)
