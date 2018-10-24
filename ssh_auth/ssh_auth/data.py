@@ -1,25 +1,24 @@
 # import etcd
 from etcd import Client
+from utils import logging
+
+logger = logging.getLogger('data')
 
 
 class Data(Client):
 
     def __init__(self, host=None, port=None):
-        host = 'localhost' if host==None else host
-        port = 2379 if port==None else port
-        super(Data, self).__init__(host=host, port=port)
+        logger.debug('Initiate Data')
+        self._host = host or 'localhost'
+        self._port = port or 2379
+        super(Data, self).__init__(host=self._host, port=self._port)
 
-    def put(self, data, key='default_key'):
-        # client = etcd.Client(host='localhost', port=2379)
-        # # client.delete(key)
-        # client.write(key, data)
-        self.write(key, data)
+    # def write_key(self, data, key='default_key'):
+    #     self.write(key, data)
 
-    def get(self, key='default_key'):
-        # client = etcd.Client(host='localhost', port=2379)
-        # o = client.get(key).value
-        o = self.get(key).value
-        return o
+    # def read_key(self, key='default_key'):
+    #     o = self.get(key).value
+    #     return o
 
     @staticmethod
     def dump(self, nodes, file='/tmp/nodes.txt'):
@@ -28,10 +27,8 @@ class Data(Client):
 
 def main():
     d = Data()
-    # d.put('hello bismog')
-    # print(d.get().value)
-    d.put('{"aa": 1, "bb": 2}')
-    print(d.get())
+    d.write('{"aa": 1, "bb": 2}')
+    logger.info(d.get())
 
 
 if __name__ == "__main__":

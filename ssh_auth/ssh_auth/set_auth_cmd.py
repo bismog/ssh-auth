@@ -9,6 +9,9 @@
 
 import os
 import subprocess
+from utils import logging
+
+logger = logging.getLogger(__name__)
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 ANSIBLE_CONFIG_PATH=PATH+'/playbook'
@@ -17,26 +20,19 @@ ANSIBLE_CONFIG_PATH=PATH+'/playbook'
 class Auth(object):
 
     def __init__(self, inventory=None, playbook=None, log='/tmp/ansible.log'):
-        if not inventory:
-            self.inventory = '{}/{}'.format(PATH, 'playbook/hosts')
-        else: 
-            self.inventory = inventory
-        if not playbook:
-            self.playbook = '{}/{}'.format(PATH, 'playbook/auth.yml')
-        else:
-            self.playbook = playbook
-        self.log = log
+        self.inventory = inventory or '{}/{}'.format(PATH, 'playbook/hosts')
+        self.playbook = playbook or '{}/{}'.format(PATH, 'playbook/auth.yml')
+        self.ansible_log = log
 
     def run(self):
         cmd = 'ansible-playbook -i {} {}'.format(self.inventory, self.playbook)
         # subprocess.check_output(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        with open(self.log, 'a') as f:
+        logger.info('Run ansible playbook')
+        with open(self.ansible_log, 'a') as f:
             os.putenv('ANSIBLE_CONFIG', ANSIBLE_CONFIG_PATH)
             p = subprocess.Popen(cmd.split(), stdout=f, stderr=f)
             # p.communicate()
             # o,e = p.communicate()
-            # print o
-            # print e
 
 def main():
     a = Auth()

@@ -7,25 +7,27 @@ import json
 # from run_etcd_cmd import Deploy
 from set_auth_cmd import Auth
 from data import Data
+from utils import logging
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 
+logger = logging.getLogger('ssh_auth')
 
 class SSHAuth(object):
     def __init__(self):
         self.server = 'localhost'
         self.port = 12379
         self.key = 'nodes'
-        self.d = Data(host=self.server, port=self.port)
-        self.nodes = self.d.get(key=self.key)
-        print json.loads(self.nodes)
+        self.former = set()
 
-    def watch(self, host, port):
-        self.d.watch(key=self.key)
-        cur_nodes = self.d.get(key=self.key)
-        data = json.loads(cur_nodes)
-        print data
-        return data
+    def watch(self, inst):
+        inst.watch(key=self.key)
+        cur_nodes = set(inst.get(key=self.key).value.split(','))
+        logger.debug(cur_nodes)
+        diff = cur_nodes.difference(self.former)
+        self.former = self.former.union(cur_nodes)
+        logger.debug('diff is {}'.format(diff))
+        return diff
 
     def gen_hosts(self, nodes):
         fd = open('./playbook/hosts', 'w+')
@@ -35,15 +37,25 @@ class SSHAuth(object):
             fd.write(host_line)
         fd.close()
 
-    def callback(self, data):
+    def callback(self, diff):
+        # Update 'hosts' file with diff
+        logger.debug('Update hosts file')
+
         a = Auth()
         a.run()
 
 def main():
-    ssh_auth = SSHAuth()
-    # while True:
-    #     ssh_auth.watch('localhost', 2379)
-    #     ssh_auth.callback()
+    logger.info('Program running...')
+    s = SSHAuth()
+    d = Data(host=s.server, port=s.port)
+    s.nodes = d.get(key=s.key).value
+    logger.debug(s.nodes)
+    while True:
+        diff = s.watch(d)
+        if not diff:
+            logger.info('No valid change occurred')
+            continue
+        s.callback(diff)
 
 if __name__ == "__main__":
     main()
