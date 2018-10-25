@@ -28,7 +28,7 @@ setup(name='ssh_auth',
     license='MIT',
     packages=['ssh_auth'],
     package_data={
-        'ssh_auth':['playbook.d/*', 'system.d/ssh-auth.service'],
+        'ssh_auth':['playbook.d/*', 'system.d/ssh-auth.service', '*.yaml'],
     },
     scripts=['ssh_auth/bin/ssh-auth'],
     cmdclass={

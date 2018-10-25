@@ -83,3 +83,4 @@
 - name: Install package
   pip:
     name: "/tmp/auth/ssh_auth/dist/ssh_auth-0.1.tar.gz"
+    state: forcereinstall
