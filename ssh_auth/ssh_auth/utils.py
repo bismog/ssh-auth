@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
+import os
 import logging
 import logging.config
 import yaml
 # import StringIO
 
+PATH = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = '{}/log_config.yaml'.format(PATH)
+
 # Loading config. Of course this is in another file in the real life
 
 # global_config = yaml.load(StringIO.StringIO(YAML_CONF))
-with open('log_config.yaml', 'r') as f:
+with open(CONFIG_PATH, 'r') as f:
     global_config = yaml.load(f.read())
 
 # Configuring logging with the subset of the dict
