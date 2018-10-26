@@ -21,7 +21,7 @@ class SSHAuth(object):
         self.former = set()
 
     def watch(self, inst):
-        inst.watch(key=self.key)
+        inst.watch(key=self.key, timeout=0)
         cur_nodes = set(inst.get(key=self.key).value.split(','))
         logger.debug(cur_nodes)
         diff = cur_nodes.difference(self.former)
@@ -33,7 +33,7 @@ class SSHAuth(object):
         fd = open('./playbook/hosts', 'w+')
         fd.write('[cluster]\n')
         for node in nodes:
-            host_line = '{} ansible_ssh_user=bismog ansible_ssh_pass=***'.format(node)
+            host_line = '{} ansible_ssh_user=userxxx ansible_ssh_pass=***'.format(node)
             fd.write(host_line)
         fd.close()
 
