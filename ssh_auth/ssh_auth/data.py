@@ -21,7 +21,7 @@ class Data(Client):
     #     return o
 
     @staticmethod
-    def dump(self, nodes, file='/tmp/nodes.txt'):
+    def dump(nodes, file='/tmp/nodes.txt'):
         with open(file, 'w+') as f:
             f.writelines(['%s\n' % item for item in nodes])
 

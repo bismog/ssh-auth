@@ -39,7 +39,8 @@ class SSHAuth(object):
 
     def callback(self, diff):
         # Update 'hosts' file with diff
-        logger.debug('Update hosts file')
+        logger.debug('Update hosts file, data: %s', tuple(diff))
+        Data.dump(diff)
 
         a = Auth()
         a.run()

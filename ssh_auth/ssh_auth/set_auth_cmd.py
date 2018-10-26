@@ -20,8 +20,8 @@ ANSIBLE_CONFIG_PATH=PATH+'/playbook'
 class Auth(object):
 
     def __init__(self, inventory=None, playbook=None, log='/tmp/ansible.log'):
-        self.inventory = inventory or '{}/{}'.format(PATH, 'playbook/hosts')
-        self.playbook = playbook or '{}/{}'.format(PATH, 'playbook/auth.yml')
+        self.inventory = inventory or '/etc/ansible/hosts'
+        self.playbook = playbook or '{}/playbook.d/auth.yml'.format(PATH)
         self.ansible_log = log
 
     def run(self):
